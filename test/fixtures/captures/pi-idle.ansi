@@ -1,0 +1,40 @@
+
+ [38;5;241mPi can explain its own features and look up its docs. Ask it how to use or extend Pi.[39m
+
+[38;5;222m[Skills][39m
+[38;5;241m  example-skill-a, example-skill-b, example-skill-c,
+example-skill-d[39m
+
+[38;5;222m[Prompts][39m
+[38;5;241m  /example[39m
+
+[38;5;222m[Extensions][39m
+[38;5;241m  example-extension.ts[39m
+
+[38;5;226m[Skill conflicts][39m
+[38;5;226m  "example-skill-a" collision:[39m
+[38;5;241m    [38;5;143m✓[39m auto (user) ~/.pi/agent/skills/example-skill-a/SKILL.md
+[38;5;241m    [38;5;226m✗[39m ~/.agents/skills/example-skill-a/SKILL.md (skipped)
+
+
+ [38;5;226mWarning: tmux extended-keys is off. Modified Enter keys may not work. Add `set -g extended-keys on` to ~/.tmux.conf
+[39m [38;5;226mand restart tmux.[39m
+
+[38;5;226m────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+[39m [1m[38;5;226mUpdate Available[0m
+ [38;5;244mNew version 1.5.0 is available. Run [38;5;109mpi update[39m
+ [38;5;244mChangelog: [38;5;109mhttps://pi.dev/changelog[39m
+[38;5;226m────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+[39m [1m[38;5;226mPackage Updates Available[0m
+ [38;5;244mPackage updates are available. Run [38;5;109mpi update --extensions[39m
+ [38;5;244mPackages:[39m
+ - example-package
+[38;5;226m────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+[38;5;139m────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+[7m[39m [0m
+[38;5;139m────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+[38;5;241m/tmp/sandbox/pi1[39m
+[38;5;241m0.0%/1.0M (auto)                                                         (provider) example-model • high

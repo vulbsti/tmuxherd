@@ -1,0 +1,160 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="620" viewBox="0 0 960 620" font-family="ui-sans-serif, -apple-system, Segoe UI, Helvetica, Arial, sans-serif" role="img" aria-labelledby="title desc">
+  <title id="title">tmuxherd pane states</title>
+  <desc id="desc">State machine. detect() reads the screen: a spinner or "esc to interrupt" means working, a cursor menu means waiting, an input box with no spinner means idle. The tracker adds time: working with no normalized screen change for N minutes, a retry loop that long, or an API error right after working means stalled; a dead pane means exited, with work pending if it was busy or exited non-zero. Inset: two spinner frames that differ only in glyph, verb and timer normalize to the same key, so they count as no progress.</desc>
+  <style>
+    /* palette:start (dark) */
+    svg { --bg: #0d1117; --ink: #e6edf3; --muted: #9198a1; --faint: #7d8590; --ghost: #3d444d;
+          --edge: #8b949e; --frame: #3d444d; --well: #151b23; --card: #0d1117; --bar: #30363d;
+          --working: #1f9e89; --waiting: #d29922; --stalled: #da3633; --idle: #8b949e; }
+    /* palette:end */
+    .bg { fill: var(--bg); }
+    text { fill: var(--ink); font-size: 11px; }
+    .cap { fill: var(--muted); font-size: 10.5px; font-weight: 600; letter-spacing: .09em; }
+    .h { font-size: 12.5px; font-weight: 600; }
+    .node { font-size: 13.5px; font-weight: 600; }
+    .m { fill: var(--muted); }
+    .s { font-size: 10px; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; font-size: 10.5px; }
+    .frame { fill: var(--well); stroke: var(--frame); stroke-width: 1.5; }
+    .box { fill: var(--card); stroke: var(--edge); stroke-width: 1.5; }
+    .wire { fill: none; stroke: var(--edge); stroke-width: 1.5; }
+    .wire.dash { stroke-dasharray: 5 4; }
+    .ah { fill: var(--edge); }
+    .w { stroke: var(--working); } .wf { fill: var(--working); }
+    .a { stroke: var(--waiting); } .af { fill: var(--waiting); }
+    .r { stroke: var(--stalled); } .rf { fill: var(--stalled); }
+    .i { stroke: var(--idle); }    .if { fill: var(--idle); }
+    text.rf { fill: var(--stalled); }
+    .chg { fill: var(--faint); text-decoration: line-through; }
+
+    /* A pulse that keeps travelling from working to stalled: work in flight,
+       no progress arriving. Invisible when animation is off, so the static
+       image is unchanged. */
+    .pulse { opacity: 0; }
+    @media (prefers-reduced-motion: no-preference) {
+      .pulse { animation: travel 2.8s cubic-bezier(.45, 0, .55, 1) infinite; }
+    }
+    @keyframes travel {
+      0%   { transform: translateX(0);     opacity: 0; }
+      15%  { opacity: 1; }
+      80%  { opacity: 1; }
+      100% { transform: translateX(218px); opacity: 0; }
+    }
+  </style>
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path class="ah" d="M0,1 L10,5 L0,9 z"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" width="960" height="620"/>
+
+  <text class="cap" x="16" y="30">THE SCREEN RIGHT NOW · detect()</text>
+  <text class="cap" x="944" y="30" text-anchor="end">OVER TIME · PaneTracker</text>
+
+  <!-- ================= nodes ================= -->
+  <rect class="box a" x="360" y="60" width="140" height="44" rx="22"/>
+  <circle class="af" cx="388" cy="82" r="5"/>
+  <text class="node" x="400" y="87">waiting</text>
+
+  <rect class="box w" x="360" y="210" width="140" height="44" rx="22"/>
+  <circle class="wf" cx="388" cy="232" r="5"/>
+  <text class="node" x="400" y="237">working</text>
+
+  <rect class="box i" x="40" y="210" width="140" height="44" rx="22"/>
+  <circle class="if" cx="68" cy="232" r="5"/>
+  <text class="node" x="80" y="237">idle</text>
+
+  <rect class="box r" x="740" y="210" width="140" height="44" rx="22"/>
+  <circle class="rf" cx="768" cy="232" r="5"/>
+  <text class="node" x="780" y="237">stalled</text>
+
+  <rect class="box r" x="740" y="350" width="140" height="44" rx="22" stroke-dasharray="5 4"/>
+  <circle class="rf" cx="768" cy="372" r="5"/>
+  <text class="node" x="780" y="377">exited</text>
+
+  <!-- ================= edges ================= -->
+  <!-- idle -> working -->
+  <line class="wire" x1="180" y1="224" x2="360" y2="224" marker-end="url(#arr)"/>
+  <text x="270" y="198" text-anchor="middle">spinner <tspan class="mono m">✻ Infusing…</tspan></text>
+  <text class="m" x="270" y="213" text-anchor="middle">or “esc to interrupt”</text>
+
+  <!-- working -> idle -->
+  <line class="wire" x1="360" y1="242" x2="180" y2="242" marker-end="url(#arr)"/>
+  <text x="270" y="261" text-anchor="middle">input box, no spinner</text>
+
+  <!-- working -> waiting -->
+  <line class="wire" x1="412" y1="210" x2="412" y2="104" marker-end="url(#arr)"/>
+  <text x="400" y="134" text-anchor="end">cursor menu</text>
+  <text class="m" x="400" y="149" text-anchor="end"><tspan class="mono">❯</tspan> or <tspan class="mono">›</tspan> + numbered options</text>
+  <text class="m" x="400" y="164" text-anchor="end">+ footer (Esc to cancel …)</text>
+
+  <!-- waiting -> working -->
+  <line class="wire" x1="448" y1="104" x2="448" y2="210" marker-end="url(#arr)"/>
+  <text x="460" y="149">answered,</text>
+  <text class="m" x="460" y="164">menu gone</text>
+
+  <!-- working -> stalled: no progress / retry loop -->
+  <line class="wire" x1="500" y1="224" x2="740" y2="224" marker-end="url(#arr)"/>
+  <circle class="pulse rf" cx="510" cy="224" r="4"/>
+  <text x="620" y="171" text-anchor="middle">no normalized screen change</text>
+  <text class="m" x="620" y="186" text-anchor="middle">for N minutes (stallMinutes, default 5)</text>
+  <text class="m" x="620" y="201" text-anchor="middle">or a retry loop <tspan class="mono">Retrying in 9s…</tspan> that long</text>
+
+  <!-- working -> stalled: error after work -->
+  <line class="wire" x1="500" y1="242" x2="740" y2="242" marker-end="url(#arr)"/>
+  <text x="620" y="261" text-anchor="middle">API error right after working</text>
+  <text class="m" x="620" y="276" text-anchor="middle"><tspan class="mono">API Error</tspan>, <tspan class="mono">Please run /login</tspan> …</text>
+
+  <!-- stalled -> working: recovery -->
+  <path class="wire" d="M810,254 V318 H430 V254" marker-end="url(#arr)"/>
+  <text class="m" x="620" y="311" text-anchor="middle">the screen makes progress again</text>
+
+  <!-- any -> exited -->
+  <circle class="ah" cx="560" cy="372" r="3"/>
+  <text class="m" x="550" y="376" text-anchor="end">any state</text>
+  <line class="wire dash" x1="560" y1="372" x2="740" y2="372" marker-end="url(#arr)"/>
+  <text x="650" y="364" text-anchor="middle">pane dead</text>
+  <text x="810" y="414" text-anchor="middle">“dead with work pending” → alert</text>
+  <text class="m" x="810" y="429" text-anchor="middle">if it was busy, or exit status ≠ 0</text>
+
+  <!-- what alerts -->
+  <text class="s m" x="430" y="48" text-anchor="middle">alert: needs your answer</text>
+  <text class="s m" x="810" y="200" text-anchor="middle">alert</text>
+
+  <!-- what "pending" means -->
+  <text class="h" x="740" y="78">work pending</text>
+  <text class="m" x="740" y="94">set while working or waiting,</text>
+  <text class="m" x="740" y="109">cleared by a clean idle</text>
+
+  <!-- ================= inset: normalization ================= -->
+  <rect class="frame" x="16" y="458" width="928" height="146" rx="10"/>
+  <text class="cap" x="32" y="482">WHY THE SCREEN IS NORMALIZED BEFORE COMPARING</text>
+
+  <rect class="box" x="32" y="494" width="300" height="34" rx="5"/>
+  <text class="mono" x="44" y="515"><tspan class="chg">✻ Infusing</tspan>… (<tspan class="chg">3</tspan>s <tspan class="chg">·</tspan> ↓ <tspan class="chg">94</tspan> tokens)</text>
+  <text class="s m" x="320" y="515" text-anchor="end">t = 3 s</text>
+  <rect class="box" x="32" y="538" width="300" height="34" rx="5"/>
+  <text class="mono" x="44" y="559"><tspan class="chg">✶ Moseying</tspan>… (<tspan class="chg">47</tspan>s <tspan class="chg">·</tspan> ↓ <tspan class="chg">94</tspan> tokens)</text>
+  <text class="s m" x="320" y="559" text-anchor="end">t = 47 s</text>
+  <text class="s m" x="32" y="592">Struck-out parts (spinner glyph, verb, digits) are dropped. Real output still changes the key and resets the clock.</text>
+
+  <path class="wire" d="M332,511 H358 V533 H392" marker-end="url(#arr)"/>
+  <path class="wire" d="M332,555 H358 V533"/>
+
+  <rect class="box" x="392" y="505" width="160" height="56" rx="5"/>
+  <text class="mono h" x="406" y="525">progressKey()</text>
+  <text class="s m" x="406" y="540">drops digits, spinner glyphs,</text>
+  <text class="s m" x="406" y="553">“…” verbs and Tip: lines</text>
+
+  <line class="wire" x1="552" y1="533" x2="592" y2="533" marker-end="url(#arr)"/>
+
+  <rect class="box" x="592" y="505" width="176" height="56" rx="5"/>
+  <text class="mono" x="606" y="526">… (s ↓ tokens)</text>
+  <text class="mono s m" x="606" y="545">key 8f461502 for both</text>
+
+  <line class="wire" x1="768" y1="533" x2="800" y2="533" marker-end="url(#arr)"/>
+  <text class="h" x="810" y="518">no progress</text>
+  <text class="m" x="810" y="534">for N minutes</text>
+  <text class="h rf" x="810" y="551">→ stalled</text>
+</svg>

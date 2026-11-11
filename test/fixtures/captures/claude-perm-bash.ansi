@@ -1,0 +1,40 @@
+
+
+[38;5;246m[48;5;237m❯ [38;5;231mCreate a file named second.txt containing the word yo. Nothing else.[39m
+
+[38;5;114m[49m●[39m [1mWrite[0m(]8;id=197soo6;file:///tmp/sandbox/proj-a/second.txt\second.txt]8;;\)
+[38;5;246m  ⎿  [39mWrote [1m1[0m line to [1m]8;id=197soo6;file:///tmp/sandbox/proj-a/second.txt\second.txt[0m]8;;\
+     [2m[38;5;231m 1 [0m[38;5;231myo[39m
+
+[38;5;231m●[39m I created [38;5;153msecond.txt[39m, and its only content is the word [38;5;153myo[39m.
+
+  [38;5;153m· Notes   ─────────────────────────────────────[39m
+  - I wrote the file with no trailing newline, so it is exactly 2 bytes. Many editors and [38;5;153mecho yo > file[39m add a [38;5;153m\n[39m at the
+    end, and that would make it 3 bytes.
+  - It is untracked, like [38;5;153mREADME.md[39m and [38;5;153mhello.txt[39m. There are no commits on [38;5;153mmaster[39m yet.
+    [38;5;153m─────────────────────────────────────────────────[39m
+
+[38;5;246m✻[39m [38;5;246mSautéed for 8s · done 5:17 PM[39m
+
+[38;5;246m[48;5;237m❯ [38;5;231mRun the shell command: curl -sI https://example.com | head -1[39m
+
+[38;5;246m[49m●[39m [1mBash[0m(curl -sI https://example.com | head -1)
+[38;5;246m  ⎿  Waiting…[39m
+
+[38;5;153m────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+[39m [1m[38;5;153mBash command[0m
+ [1mTip: auto mode handles these prompts for you — choose "switch to auto mode" below[0m
+ [38;5;246mFetch HTTP status line from example.com[39m
+[38;5;239m╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌
+[39m curl -sI https://example.com | head -1
+[38;5;239m╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌
+[39m This command requires approval
+
+ Do you want to proceed?
+ [38;5;153m❯[39m [38;5;246m1.[39m [38;5;153mYes[39m
+   [38;5;246m2.[39m Yes, and don’t ask again for: curl -sI https://example.com
+   [38;5;246m3.[39m Yes, and switch to auto mode[38;5;246m ·[39m [38;5;246mauto[39m [38;5;246mmode[39m [38;5;246mhandles[39m [38;5;246mthese[39m [38;5;246mprompts[39m [38;5;246mfor[39m [38;5;246myou[39m
+   [38;5;246m4.[39m No
+
+ [38;5;246mEsc[39m [38;5;246mto[39m [38;5;246mcancel[39m [38;5;246m·[39m [38;5;246mTab[39m [38;5;246mto[39m [38;5;246mamend[39m
+

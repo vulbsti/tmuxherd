@@ -1,0 +1,236 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="690" viewBox="0 0 960 690" font-family="ui-sans-serif, -apple-system, Segoe UI, Helvetica, Arial, sans-serif" role="img" aria-labelledby="title desc">
+  <title id="title">tmuxherd architecture</title>
+  <desc id="desc">The browser dashboard talks to one local tmuxherd Node process over HTTP and Server-Sent Events. The process polls its own tmux server with capture-pane, classifies each screen with detect(), tracks state over time, raises alerts, and answers prompts with send-keys. The user's default tmux server is never touched, except for panes explicitly adopted.</desc>
+  <style>
+    /* palette:start (dark) */
+    svg { --bg: #0d1117; --ink: #e6edf3; --muted: #9198a1; --faint: #7d8590; --ghost: #3d444d;
+          --edge: #8b949e; --frame: #3d444d; --well: #151b23; --card: #0d1117; --bar: #30363d;
+          --working: #1f9e89; --waiting: #d29922; --stalled: #da3633; --idle: #8b949e; }
+    /* palette:end */
+    .bg { fill: var(--bg); }
+    text { fill: var(--ink); font-size: 11px; }
+    .cap { fill: var(--muted); font-size: 10.5px; font-weight: 600; letter-spacing: .09em; }
+    .h { font-size: 12.5px; font-weight: 600; }
+    .m { fill: var(--muted); }
+    .s { font-size: 10px; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; font-size: 10.5px; }
+    .mono.s { font-size: 9.5px; }
+    .gh, .gh text { fill: var(--faint); }
+    .frame { fill: var(--well); stroke: var(--frame); stroke-width: 1.5; }
+    .box { fill: var(--card); stroke: var(--edge); stroke-width: 1.5; }
+    .ghost { fill: none; stroke: var(--ghost); stroke-width: 1.5; }
+    .wire { fill: none; stroke: var(--edge); stroke-width: 1.5; }
+    .wire.dash { stroke-dasharray: 5 4; }
+    .wire.no { stroke: var(--faint); }
+    .bar { fill: var(--bar); }
+    .ah { fill: var(--edge); }
+    .w { stroke: var(--working); } .wf { fill: var(--working); }
+    .a { stroke: var(--waiting); } .af { fill: var(--waiting); }
+    .r { stroke: var(--stalled); } .rf { fill: var(--stalled); }
+    .i { stroke: var(--idle); }    .if { fill: var(--idle); }
+    text.wf { fill: var(--working); }
+  </style>
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path class="ah" d="M0,1 L10,5 L0,9 z"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" width="960" height="690"/>
+
+  <!-- column captions -->
+  <text class="cap" x="16" y="30">BROWSER</text>
+  <text class="cap" x="330" y="30">TMUXHERD · ONE NODE PROCESS</text>
+  <text class="cap" x="784" y="30">TMUX</text>
+
+  <!-- ================= left: browser dashboard ================= -->
+  <rect class="box" x="16" y="44" width="170" height="372" rx="8"/>
+  <line class="wire" x1="16" y1="66" x2="186" y2="66"/>
+  <circle class="if" cx="28" cy="55" r="3"/><circle class="if" cx="38" cy="55" r="3"/><circle class="if" cx="48" cy="55" r="3"/>
+  <text class="mono s m" x="62" y="58.5">127.0.0.1:7420</text>
+
+  <text class="s m" x="28" y="84">grid</text>
+  <!-- tiles: border colour = state -->
+  <g>
+    <rect class="box w" x="28" y="90" width="44" height="32" rx="3"/>
+    <rect class="box w" x="79" y="90" width="44" height="32" rx="3"/>
+    <rect class="box a" x="130" y="90" width="44" height="32" rx="3"/>
+    <rect class="box i" x="28" y="128" width="44" height="32" rx="3"/>
+    <rect class="box r" x="79" y="128" width="44" height="32" rx="3"/>
+    <rect class="box w" x="130" y="128" width="44" height="32" rx="3"/>
+    <circle class="wf" cx="35" cy="98" r="2.5"/><circle class="wf" cx="86" cy="98" r="2.5"/><circle class="af" cx="137" cy="98" r="2.5"/>
+    <circle class="if" cx="35" cy="136" r="2.5"/><circle class="rf" cx="86" cy="136" r="2.5"/><circle class="wf" cx="137" cy="136" r="2.5"/>
+    <rect class="bar" x="41" y="96.5" width="24" height="3" rx="1"/><rect class="bar" x="92" y="96.5" width="20" height="3" rx="1"/><rect class="bar" x="143" y="96.5" width="24" height="3" rx="1"/>
+    <rect class="bar" x="33" y="106" width="34" height="2.5" rx="1"/><rect class="bar" x="84" y="106" width="30" height="2.5" rx="1"/><rect class="bar" x="135" y="106" width="22" height="2.5" rx="1"/>
+    <rect class="bar" x="33" y="112" width="24" height="2.5" rx="1"/><rect class="bar" x="84" y="112" width="34" height="2.5" rx="1"/><rect class="bar" x="135" y="112" width="32" height="2.5" rx="1"/>
+    <rect class="bar" x="41" y="134.5" width="18" height="3" rx="1"/><rect class="bar" x="92" y="134.5" width="24" height="3" rx="1"/><rect class="bar" x="143" y="134.5" width="20" height="3" rx="1"/>
+    <rect class="bar" x="33" y="144" width="30" height="2.5" rx="1"/><rect class="bar" x="84" y="144" width="26" height="2.5" rx="1"/><rect class="bar" x="135" y="144" width="34" height="2.5" rx="1"/>
+    <rect class="bar" x="33" y="150" width="20" height="2.5" rx="1"/><rect class="bar" x="84" y="150" width="32" height="2.5" rx="1"/><rect class="bar" x="135" y="150" width="26" height="2.5" rx="1"/>
+  </g>
+
+  <text class="s m" x="28" y="182">prompt inbox</text>
+  <rect class="box a" x="28" y="188" width="146" height="72" rx="4"/>
+  <text class="s m" x="37" y="203">codex · add-tests</text>
+  <text x="37" y="219">Allow this command?</text>
+  <rect class="box a" x="37" y="228" width="58" height="22" rx="3"/>
+  <text class="mono s" x="66" y="242.5" text-anchor="middle">1 Yes</text>
+  <rect class="box" x="101" y="228" width="64" height="22" rx="3"/>
+  <text class="mono s" x="133" y="242.5" text-anchor="middle">2 No</text>
+
+  <text class="s m" x="28" y="282">zoom view · 4 Hz</text>
+  <rect class="box" x="28" y="288" width="146" height="116" rx="4"/>
+  <text class="mono s" x="37" y="304">● Edit src/auth.js</text>
+  <rect class="bar" x="37" y="313" width="112" height="3" rx="1"/>
+  <rect class="bar" x="37" y="322" width="90" height="3" rx="1"/>
+  <rect class="bar" x="37" y="331" width="124" height="3" rx="1"/>
+  <rect class="bar" x="37" y="340" width="70" height="3" rx="1"/>
+  <rect class="bar" x="37" y="349" width="104" height="3" rx="1"/>
+  <text class="mono s wf" x="37" y="372">✻ Infusing… (3s)</text>
+  <rect class="bar" x="37" y="384" width="128" height="3" rx="1"/>
+  <text class="mono s m" x="37" y="397">❯</text>
+
+  <!-- alert sinks outside the browser -->
+  <text class="cap" x="16" y="492">ALERTS</text>
+  <rect class="box" x="16" y="502" width="170" height="44" rx="6"/>
+  <text class="h" x="28" y="520">desktop notification</text>
+  <text class="mono s m" x="28" y="536">notify-send · osascript</text>
+  <rect class="box" x="16" y="566" width="170" height="44" rx="6"/>
+  <text class="h" x="28" y="584">webhook</text>
+  <text class="mono s m" x="28" y="600">json · slack · text</text>
+
+  <!-- ================= middle: tmuxherd process ================= -->
+  <rect class="frame" x="330" y="44" width="300" height="590" rx="10"/>
+
+  <rect class="box" x="346" y="60" width="268" height="128" rx="6"/>
+  <text class="h" x="360" y="81">HTTP + SSE server</text>
+  <text class="m" x="360" y="102">binds 127.0.0.1 only</text>
+  <text class="m" x="360" y="119">launch token → HttpOnly cookie</text>
+  <text class="m" x="360" y="136">Host + Origin checks, strict CSP</text>
+  <text class="m" x="360" y="153">Bearer token for scripts</text>
+  <text class="m" x="360" y="170">panes addressed by key only</text>
+
+  <rect class="box" x="370" y="214" width="244" height="46" rx="6"/>
+  <text class="h" x="384" y="233">answer</text>
+  <text class="mono" x="436" y="233">move → verify → Enter</text>
+  <text class="s m" x="384" y="250">prompt fingerprint must still match</text>
+
+  <rect class="box" x="370" y="286" width="244" height="46" rx="6"/>
+  <text class="h" x="384" y="305">Supervisor</text>
+  <text class="m" x="455" y="305">poll loop</text>
+  <text class="s m" x="384" y="322">list panes → capture → detect → track</text>
+
+  <rect class="box" x="370" y="358" width="244" height="46" rx="6"/>
+  <text class="h mono" x="384" y="377">detect()</text>
+  <text class="s m" x="384" y="394">screen → state + prompt (pure)</text>
+
+  <rect class="box" x="370" y="430" width="244" height="46" rx="6"/>
+  <text class="h" x="384" y="449">PaneTracker</text>
+  <text class="s m" x="384" y="466">time → stalled / exited</text>
+
+  <rect class="box" x="370" y="502" width="244" height="46" rx="6"/>
+  <text class="h" x="384" y="521">Watchdog</text>
+  <text class="s m" x="384" y="538">alerts: stalled · dead · waiting</text>
+
+  <rect class="box" x="370" y="574" width="244" height="46" rx="6"/>
+  <text class="h" x="384" y="593">Notifier</text>
+  <text class="s m" x="384" y="610">desktop + webhook, once per episode</text>
+
+  <!-- internal wiring -->
+  <line class="wire" x1="560" y1="188" x2="560" y2="214" marker-end="url(#arr)"/>
+  <line class="wire" x1="492" y1="332" x2="492" y2="358" marker-end="url(#arr)"/>
+  <line class="wire" x1="492" y1="404" x2="492" y2="430" marker-end="url(#arr)"/>
+  <line class="wire" x1="492" y1="476" x2="492" y2="502" marker-end="url(#arr)"/>
+  <line class="wire" x1="492" y1="548" x2="492" y2="574" marker-end="url(#arr)"/>
+  <!-- event bus: Supervisor (screen, pane) and Watchdog (alert) up to the server -->
+  <path class="wire" d="M370,525 H356 V188" marker-end="url(#arr)"/>
+  <path class="wire" d="M370,309 H356"/>
+  <circle class="ah" cx="356" cy="309" r="2.5"/>
+  <text class="s m" transform="translate(345 420) rotate(-90)" text-anchor="middle">events</text>
+
+  <!-- ================= right: tmux ================= -->
+  <rect class="frame" x="784" y="44" width="160" height="272" rx="10"/>
+  <text class="mono h" x="798" y="66">tmux -L tmuxherd</text>
+  <text class="mono h" x="798" y="82">-f tmuxherd.conf</text>
+  <text class="s m" x="798" y="98">own socket, own config</text>
+
+  <rect class="box" x="798" y="108" width="132" height="44" rx="5"/>
+  <circle class="wf" cx="811" cy="124" r="4"/>
+  <text class="mono h" x="821" y="128">claude</text>
+  <text class="mono s m" x="922" y="128" text-anchor="end">%1</text>
+  <text class="mono s m" x="809" y="144">worktree: fix-auth</text>
+
+  <rect class="box" x="798" y="160" width="132" height="44" rx="5"/>
+  <circle class="af" cx="811" cy="176" r="4"/>
+  <text class="mono h" x="821" y="180">codex</text>
+  <text class="mono s m" x="922" y="180" text-anchor="end">%2</text>
+  <text class="mono s m" x="809" y="196">worktree: add-tests</text>
+
+  <rect class="box" x="798" y="212" width="132" height="44" rx="5"/>
+  <circle class="if" cx="811" cy="228" r="4"/>
+  <text class="mono h" x="821" y="232">pi</text>
+  <text class="mono s m" x="922" y="232" text-anchor="end">%3</text>
+  <text class="mono s m" x="809" y="248">cwd: ~/code/app</text>
+
+  <text class="s m" x="798" y="278">metadata in pane options</text>
+  <text class="mono s m" x="798" y="293">@th_harness, @th_name …</text>
+
+  <!-- the user's own tmux server -->
+  <g class="gh">
+    <rect class="ghost" x="784" y="380" width="160" height="220" rx="10" stroke-dasharray="2 3"/>
+    <text class="h" x="798" y="400">your default</text>
+    <text class="h" x="798" y="415">tmux server</text>
+    <text class="mono s" x="798" y="431">~/.tmux.conf, plugins</text>
+    <rect class="ghost" x="798" y="494" width="132" height="34" rx="5"/>
+    <text class="mono s" x="809" y="515">shells</text>
+    <rect class="ghost" x="798" y="538" width="132" height="34" rx="5"/>
+    <text class="mono s" x="809" y="559">editor, logs …</text>
+  </g>
+  <rect class="box" x="798" y="442" width="132" height="42" rx="5" stroke-dasharray="5 4"/>
+  <text class="mono h" x="809" y="460">%7</text>
+  <text class="s m" x="809" y="475">adopted pane</text>
+
+  <!-- ================= arrows between columns ================= -->
+  <!-- browser <-> server -->
+  <line class="wire" x1="346" y1="96" x2="186" y2="96" marker-end="url(#arr)"/>
+  <text class="mono s" x="258" y="77" text-anchor="middle">SSE /api/events</text>
+  <text class="mono s m" x="258" y="89" text-anchor="middle">screen · pane · alert</text>
+
+  <line class="wire" x1="186" y1="140" x2="346" y2="140" marker-end="url(#arr)"/>
+  <text class="mono s" x="258" y="121" text-anchor="middle">POST /answer</text>
+  <text class="mono s m" x="258" y="133" text-anchor="middle">{fingerprint, option}</text>
+
+  <line class="wire" x1="186" y1="174" x2="346" y2="174" marker-end="url(#arr)"/>
+  <text class="mono s m" x="258" y="166" text-anchor="middle">POST /focus · /keys</text>
+
+  <!-- notifier -> sinks -->
+  <path class="wire" d="M370,588 H226 V524 H186" marker-end="url(#arr)"/>
+  <path class="wire" d="M370,600 H186" marker-end="url(#arr)"/>
+
+  <!-- process <-> tmux -->
+  <line class="wire" x1="614" y1="237" x2="784" y2="237" marker-end="url(#arr)"/>
+  <text class="mono" x="707" y="229" text-anchor="middle">send-keys</text>
+  <text class="s m" x="707" y="252" text-anchor="middle">Up · Down · Enter</text>
+
+  <line class="wire" x1="784" y1="302" x2="614" y2="302" marker-end="url(#arr)"/>
+  <text class="mono" x="707" y="294" text-anchor="middle">capture-pane -e -p</text>
+  <text class="s m" x="707" y="317" text-anchor="middle">1 Hz · 4 Hz zoomed</text>
+
+  <!-- adopt (opt-in) -->
+  <path class="wire dash" d="M614,325 H652 V463 H798" marker-end="url(#arr)"/>
+  <text x="662" y="392">adopt (opt-in)</text>
+  <text class="mono s m" x="662" y="407">--adopt default:%7</text>
+
+  <!-- never touched -->
+  <line class="wire no" x1="630" y1="561" x2="780" y2="561"/>
+  <line class="wire no" x1="780" y1="553" x2="780" y2="569"/>
+  <text class="gh" x="705" y="553" text-anchor="middle" font-weight="600">never touched</text>
+  <text class="gh s" x="705" y="577" text-anchor="middle">no list-panes -a, no kill</text>
+
+  <!-- legend -->
+  <g transform="translate(330 664)">
+    <circle class="wf" cx="5" cy="-4" r="4"/><text class="m" x="14" y="0">working</text>
+    <circle class="af" cx="80" cy="-4" r="4"/><text class="m" x="89" y="0">waiting</text>
+    <circle class="rf" cx="153" cy="-4" r="4"/><text class="m" x="162" y="0">stalled / exited</text>
+    <circle class="if" cx="264" cy="-4" r="4"/><text class="m" x="273" y="0">idle</text>
+  </g>
+</svg>

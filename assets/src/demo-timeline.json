@@ -1,0 +1,34 @@
+[
+ {
+  "label": "dashboard",
+  "t": 0.077
+ },
+ {
+  "label": "hover web-tests",
+  "t": 4.036
+ },
+ {
+  "label": "hover api-fix",
+  "t": 7.236
+ },
+ {
+  "label": "approved api-fix",
+  "t": 11.058
+ },
+ {
+  "label": "api-fix idle",
+  "t": 19.803
+ },
+ {
+  "label": "billing stalled",
+  "t": 23.605
+ },
+ {
+  "label": "hover billing",
+  "t": 25.519
+ },
+ {
+  "label": "end",
+  "t": 29.02
+ }
+]

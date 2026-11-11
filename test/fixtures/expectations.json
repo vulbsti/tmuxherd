@@ -1,0 +1,17 @@
+{
+  "claude-trust.txt":        { "harness": "claude", "state": "waiting", "prompt": { "kind": "trust", "options": ["No, exit", "Yes, I trust this folder"], "selected": 0 } },
+  "claude-perm-edit.txt":    { "harness": "claude", "state": "waiting", "prompt": { "kind": "permission", "question": "Do you want to create second.txt?", "optionCount": 3, "selected": 0 } },
+  "claude-perm-bash.txt":    { "harness": "claude", "state": "waiting", "prompt": { "kind": "permission", "question": "Do you want to proceed?", "optionCount": 4, "selected": 0, "contextIncludes": "curl -sI https://example.com | head -1" } },
+  "claude-working-bash.txt": { "harness": "claude", "state": "working" },
+  "claude-thinking.txt":     { "harness": "claude", "state": "working" },
+  "claude-idle.txt":         { "harness": "claude", "state": "idle", "error": false },
+  "claude-retrying.txt":     { "harness": "claude", "state": "working", "retrying": true },
+  "claude-api-error.txt":    { "harness": "claude", "state": "idle", "error": true },
+  "claude-exited.txt":       { "harness": "claude", "state": "idle" },
+  "codex-trust.txt":         { "harness": "codex", "state": "waiting", "prompt": { "kind": "trust", "question": "Trust this folder?", "optionCount": 2, "selected": 0 } },
+  "codex-approval.txt":      { "harness": "codex", "state": "waiting", "prompt": { "kind": "permission", "question": "Would you like to run the following command?", "optionCount": 3, "selected": 0, "contextIncludes": "$ printf hi > hello.txt" } },
+  "codex-working.txt":       { "harness": "codex", "state": "working" },
+  "codex-idle.txt":          { "harness": "codex", "state": "idle", "error": false },
+  "codex-reconnecting.txt":  { "harness": "codex", "state": "working", "retrying": true },
+  "pi-idle.txt":             { "harness": "pi", "state": "idle" }
+}

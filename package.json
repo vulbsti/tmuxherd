@@ -1,0 +1,56 @@
+{
+  "name": "tmuxherd",
+  "version": "0.1.0",
+  "description": "A local web dashboard for supervising Claude Code, Codex, Pi and any terminal coding agent running in tmux: live grid, state detection, answer permission prompts from the browser, stall watchdog.",
+  "type": "module",
+  "bin": {
+    "tmuxherd": "bin/tmuxherd.js"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "public/",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "os": [
+    "linux",
+    "darwin"
+  ],
+  "scripts": {
+    "start": "node bin/tmuxherd.js",
+    "test": "node --test test/*.test.js",
+    "lint": "eslint .",
+    "e2e": "playwright test --project=fake",
+    "e2e:real": "TMUXHERD_REAL_AGENTS=1 playwright test --project=real"
+  },
+  "keywords": [
+    "tmux",
+    "claude-code",
+    "codex",
+    "ai-agents",
+    "coding-agents",
+    "dashboard",
+    "supervisor",
+    "permissions",
+    "watchdog",
+    "worktree"
+  ],
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vulbsti/tmuxherd.git"
+  },
+  "homepage": "https://github.com/vulbsti/tmuxherd#readme",
+  "bugs": "https://github.com/vulbsti/tmuxherd/issues",
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.64.1",
+    "eslint": "^10.14.0",
+    "globals": "^17.14.0"
+  }
+}

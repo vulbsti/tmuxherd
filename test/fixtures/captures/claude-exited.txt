@@ -1,0 +1,40 @@
+    25 seconds later.
+  - You run it yourself by typing ! sleep 25 && echo slept at the prompt. That runs it directly in this session.
+
+  · Notes   ─────────────────────────────────────
+  - The block exists so the agent doesn't sit idle on fixed waits. When the goal is to wait for a condition, a polling
+    loop (until <check>; do sleep 2; done) or a background job is the recommended approach.
+  - && only runs echo slept if sleep exits successfully (status 0), so stopping the sleep early with Ctrl-C would also
+    skip the echo.
+    ─────────────────────────────────────────────────
+
+✻ Crunched for 6s · done 5:18 PM
+
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+❯ /exit
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Resume this session with:
+claude --permission-mode default --resume 00000000-0000-0000-0000-000000000000
+
+Pane is dead (status 0, Thu Nov  5 17:22:40 2026)

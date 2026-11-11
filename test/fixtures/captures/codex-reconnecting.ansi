@@ -1,0 +1,40 @@
+
+  [38;5;75m>_ [1m[39mOpenAI Codex[0;2m (v0.166.0)[0m
+     [2m/tmp/sandbox/codex1[0m
+
+[48;5;8m
+[1;2m› [0m[48;5;8mSay hi
+
+[49m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[2m◦[0m [2mReconnecting... waiting for network[0m [2m(19s • [0;1mesc[0;2m to interrupt)[0m
+[2m  └ Connection failed: error sending request[0m
+
+
+[1m›[0m [2mAsk Codex to do anything[0m
+
+  model-x high · /tmp/sandbox/codex1
+  [1m?[0m for shortcuts                                                                              ⚠ [38;5;179m1 warning[39m · [1mf2[0m to view

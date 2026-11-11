@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>tmuxherd</title>
+  <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+  <link rel="stylesheet" href="/static/style.css">
+  <script type="module" src="/static/app.js"></script>
+</head>
+<body>
+  <header class="bar">
+    <div class="brand">
+      <svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="4" width="9" height="7" rx="1.5"/><rect x="13" y="4" width="9" height="7" rx="1.5"/><rect x="2" y="13" width="9" height="7" rx="1.5"/><rect x="13" y="13" width="9" height="7" rx="1.5" class="mark-hot"/></svg>
+      <span class="wordmark">tmuxherd</span>
+    </div>
+
+    <nav class="counts" aria-label="Agents by state" data-testid="counts">
+      <button type="button" class="count" data-count="working" aria-pressed="false" title="Show only working agents"><b>0</b><span>working</span></button>
+      <button type="button" class="count" data-count="waiting" aria-pressed="false" title="Show only agents waiting for an answer"><b>0</b><span>waiting</span></button>
+      <button type="button" class="count" data-count="stalled" aria-pressed="false" title="Show only stalled agents"><b>0</b><span>stalled</span></button>
+      <button type="button" class="count" data-count="idle" aria-pressed="false" title="Show only idle agents"><b>0</b><span>idle</span></button>
+      <button type="button" class="count" data-count="exited" aria-pressed="false" title="Show only exited agents"><b>0</b><span>exited</span></button>
+    </nav>
+
+    <div class="bar-meta">
+      <div class="attach-hint" title="Attach to the herd from any terminal">
+        <span class="socket">socket <b id="socket-name">–</b></span>
+        <code id="attach-cmd">tmux attach</code>
+        <button type="button" class="icon-btn" id="attach-copy" data-testid="attach-copy" aria-label="Copy attach command"></button>
+      </div>
+      <span class="conn" id="conn" data-testid="conn" data-conn="connecting" role="status">connecting</span>
+    </div>
+
+    <div class="bar-actions">
+      <button type="button" class="icon-btn" id="settings-btn" data-testid="settings" aria-haspopup="dialog" aria-expanded="false" aria-controls="settings-pop" aria-label="Watchdog and notification settings"></button>
+      <button type="button" class="btn primary" id="new-agent" data-testid="new-agent"><span class="plus" aria-hidden="true"></span>New agent</button>
+    </div>
+  </header>
+
+  <section class="settings-pop" id="settings-pop" data-testid="settings-panel" role="dialog" aria-label="Settings" hidden>
+    <h2>Watchdog</h2>
+    <p class="hint">An agent is flagged when it stops changing its screen while it still has work to do.</p>
+    <form id="cfg-form" class="cfg-grid" novalidate>
+      <label for="cfg-stall">Stalled after</label>
+      <span class="unit-field"><input id="cfg-stall" data-testid="cfg-stall" type="number" min="0" max="1440" step="0.1" inputmode="decimal"><span>min</span></span>
+      <label for="cfg-dead">Exited alert after</label>
+      <span class="unit-field"><input id="cfg-dead" data-testid="cfg-dead" type="number" min="0" max="1440" step="0.1" inputmode="decimal"><span>min</span></span>
+      <label for="cfg-waiting">Waiting alert after</label>
+      <span class="unit-field"><input id="cfg-waiting" data-testid="cfg-waiting" type="number" min="0" max="1440" step="0.1" inputmode="decimal"><span>min</span></span>
+      <label class="check-field span2" for="cfg-notify-waiting"><input id="cfg-notify-waiting" data-testid="cfg-notify-waiting" type="checkbox"><span>Alert when an agent asks a question</span></label>
+    </form>
+    <p class="cfg-status" id="cfg-status" role="status"></p>
+    <h2>Notifications</h2>
+    <p class="hint" id="notify-channels"></p>
+    <div class="cfg-actions">
+      <button type="button" class="btn" id="notify-enable" data-testid="notify-enable">Enable browser notifications</button>
+      <button type="button" class="btn" id="test-alert" data-testid="test-alert">Send test alert</button>
+    </div>
+  </section>
+
+  <div class="layout">
+    <aside class="side" aria-label="Inbox and alerts">
+      <section class="inbox" id="inbox" data-testid="inbox" aria-labelledby="inbox-title" data-empty="true">
+        <h2 id="inbox-title">Waiting on you <span class="badge" id="inbox-count">0</span></h2>
+        <p class="side-empty" id="inbox-empty">No agent is asking for anything.</p>
+        <div class="inbox-list" id="inbox-list"></div>
+      </section>
+      <section class="alerts" aria-labelledby="alerts-title">
+        <h2 id="alerts-title">Alerts <span class="badge" id="alerts-count">0</span></h2>
+        <ul class="alert-list" id="alert-active" data-testid="alerts-active"></ul>
+        <details class="history" id="history">
+          <summary>History <span id="history-count">0</span></summary>
+          <ul class="alert-list" id="alert-history" data-testid="alerts-history"></ul>
+        </details>
+      </section>
+    </aside>
+
+    <main class="board" id="board">
+      <div class="filter-note" id="filter-note" hidden>
+        <span id="filter-text"></span>
+        <button type="button" class="link-btn" id="filter-clear">Show all</button>
+      </div>
+      <div class="grid" id="grid" data-testid="grid"></div>
+      <section class="empty" id="empty" data-testid="empty" hidden>
+        <svg class="empty-art" viewBox="0 0 120 72" aria-hidden="true"><rect x="4" y="4" width="52" height="30" rx="3"/><rect x="64" y="4" width="52" height="30" rx="3"/><rect x="4" y="40" width="52" height="28" rx="3"/><rect x="64" y="40" width="52" height="28" rx="3" class="empty-art-dash"/></svg>
+        <h1>No agents yet</h1>
+        <p>Start a coding agent here and it will appear as a live tile. You can watch it work, answer its permission prompts and get told when it stalls.</p>
+        <p class="empty-alt">Agents started by hand inside <code id="empty-socket">tmux -L tmuxherd</code> show up too.</p>
+        <button type="button" class="btn primary big" id="new-agent-empty" data-testid="new-agent-empty"><span class="plus" aria-hidden="true"></span>New agent</button>
+      </section>
+    </main>
+  </div>
+
+  <div class="zoom" id="zoom" data-testid="zoom" role="dialog" aria-modal="true" aria-labelledby="zoom-name" hidden>
+    <div class="zoom-frame">
+      <header class="zoom-head">
+        <div class="zoom-id">
+          <span class="name" id="zoom-name"></span>
+          <span class="harness" id="zoom-harness"></span>
+          <span class="wt" id="zoom-wt" hidden></span>
+          <span class="pill" id="zoom-pill"></span>
+          <span class="cwd" id="zoom-cwd"></span>
+        </div>
+        <div class="zoom-tools">
+          <span class="attach-hint compact">
+            <code id="zoom-attach"></code>
+            <button type="button" class="icon-btn" id="zoom-copy" data-testid="zoom-copy" aria-label="Copy attach command"></button>
+          </span>
+          <button type="button" class="btn" id="zoom-history" data-testid="zoom-scrollback">Load scrollback</button>
+          <button type="button" class="btn danger" id="zoom-kill" data-testid="zoom-kill">Kill</button>
+          <button type="button" class="icon-btn close" id="zoom-close" data-testid="zoom-close" aria-label="Close"></button>
+        </div>
+      </header>
+      <div class="zoom-alarm" id="zoom-alarm" hidden></div>
+      <div class="zoom-body">
+        <div class="zoom-screen" id="zoom-screen" data-testid="zoom-screen" tabindex="0" aria-label="Terminal. Click to type into the agent; press Escape twice to stop.">
+          <pre class="term" id="zoom-term"></pre>
+        </div>
+        <div class="capture-bar" id="capture-bar">
+          <span class="capture-state" id="capture-state" data-testid="capture-state"></span>
+          <span class="capture-hint" id="capture-hint"></span>
+        </div>
+      </div>
+      <div class="zoom-prompt" id="zoom-prompt" hidden></div>
+    </div>
+  </div>
+
+  <dialog class="spawn" id="spawn" data-testid="spawn-dialog" aria-labelledby="spawn-title">
+    <form id="spawn-form" novalidate>
+      <header class="dialog-head">
+        <h2 id="spawn-title">New agent</h2>
+        <button type="button" class="icon-btn close" id="spawn-cancel-x" aria-label="Close"></button>
+      </header>
+      <div class="form-grid">
+        <label for="spawn-preset">Agent</label>
+        <select id="spawn-preset" data-testid="spawn-preset" name="preset"></select>
+
+        <label for="spawn-command" class="custom-only">Command</label>
+        <input id="spawn-command" class="custom-only mono" data-testid="spawn-command" name="command" type="text" autocomplete="off" spellcheck="false" placeholder="aider --model sonnet">
+
+        <label for="spawn-harness" class="custom-only">Screen format</label>
+        <select id="spawn-harness" class="custom-only" data-testid="spawn-harness" name="harness">
+          <option value="generic">Generic CLI</option>
+          <option value="claude">Claude Code</option>
+          <option value="codex">Codex CLI</option>
+          <option value="pi">Pi</option>
+        </select>
+
+        <label for="spawn-name">Name</label>
+        <input id="spawn-name" data-testid="spawn-name" name="name" type="text" autocomplete="off" spellcheck="false" placeholder="fix-auth" pattern="[A-Za-z0-9_.\-]*">
+
+        <label for="spawn-cwd">Directory</label>
+        <input id="spawn-cwd" class="mono" data-testid="spawn-cwd" name="cwd" type="text" autocomplete="off" spellcheck="false" placeholder="~/code/app">
+
+        <label for="spawn-prompt">First message</label>
+        <textarea id="spawn-prompt" data-testid="spawn-prompt" name="prompt" rows="3" placeholder="Fix the failing auth test and explain the cause."></textarea>
+
+        <label for="spawn-args">Extra arguments</label>
+        <input id="spawn-args" class="mono" data-testid="spawn-args" name="args" type="text" autocomplete="off" spellcheck="false" placeholder="--permission-mode default">
+
+        <span></span>
+        <label class="check-field" for="spawn-worktree"><input id="spawn-worktree" data-testid="spawn-worktree" name="worktree" type="checkbox"><span>Create a git worktree on a new branch</span></label>
+
+        <label for="spawn-branch" class="wt-only">Branch</label>
+        <input id="spawn-branch" class="wt-only mono" data-testid="spawn-branch" name="branch" type="text" autocomplete="off" spellcheck="false" placeholder="fix-auth">
+
+        <label for="spawn-base" class="wt-only">From</label>
+        <input id="spawn-base" class="wt-only mono" data-testid="spawn-base" name="base" type="text" autocomplete="off" spellcheck="false" placeholder="current HEAD">
+      </div>
+      <p class="form-note" id="spawn-note"></p>
+      <p class="form-error" id="spawn-error" data-testid="spawn-error" role="alert" hidden></p>
+      <footer class="dialog-foot">
+        <button type="button" class="btn" id="spawn-cancel">Cancel</button>
+        <button type="submit" class="btn primary" id="spawn-submit" data-testid="spawn-submit">Start agent</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <div class="toasts" id="toasts" aria-live="polite"></div>
+</body>
+</html>

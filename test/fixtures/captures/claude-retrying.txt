@@ -1,0 +1,40 @@
+ ▐▛███▛█   Claude Code v2.1.318
+▝▜██████▀  Opus 5.5 · Claude API
+ ▝▝   ▝▝   /tmp/sandbox/proj-a
+
+
+❯ Say hi
+
+✻ Connection refused — a firewall or proxy may be blocking it (ECONNREFUSED) · Retrying in 4s · attempt 5/10
+
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+❯ 
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+  ⏸ manual mode on
+                  tmux focus-events off · add 'set -g focus-events on' to ~/.tmux.conf and reattach for focus tracking
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

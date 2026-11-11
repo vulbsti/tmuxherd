@@ -1,0 +1,60 @@
+name: Bug report
+description: Something is not working as expected
+labels: [bug]
+body:
+  - type: input
+    id: os
+    attributes:
+      label: OS
+      placeholder: Ubuntu 24.04 / macOS 15.1
+    validations:
+      required: true
+  - type: input
+    id: tmux
+    attributes:
+      label: tmux version
+      description: Output of `tmux -V`
+      placeholder: tmux 3.4
+    validations:
+      required: true
+  - type: input
+    id: node
+    attributes:
+      label: Node version
+      description: Output of `node -v`
+      placeholder: v20.11.0
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: tmuxherd version
+      description: Output of `tmuxherd --version`
+      placeholder: 0.1.0
+    validations:
+      required: true
+  - type: input
+    id: harness
+    attributes:
+      label: Harness and version
+      description: Which agent, and its version
+      placeholder: claude 2.0.1 / codex 0.40 / pi 1.2
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What did you do, what did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: capture
+    attributes:
+      label: Pane capture
+      description: |
+        Capture the affected pane with `tmux -L tmuxherd capture-pane -p -t <pane>` and paste it here.
+        Redact secrets, tokens, usernames and private paths first.
+      render: text
+    validations:
+      required: false

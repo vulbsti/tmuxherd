@@ -1,0 +1,40 @@
+    25 seconds later.
+  - [1mYou run it yourself[0m by typing [38;5;153m! sleep 25 && echo slept[39m at the prompt. That runs it directly in this session.
+
+  [38;5;153m·[39m [38;5;153mNotes  [39m [38;5;153m─────────────────────────────────────[39m
+  - The block exists so the agent doesn't sit idle on fixed waits. When the goal is to wait for a condition, a polling
+    loop ([38;5;153muntil[39m [38;5;153m<check>;[39m [38;5;153mdo[39m [38;5;153msleep[39m [38;5;153m2;[39m [38;5;153mdone[39m) or a background job is the recommended approach.
+  - [38;5;153m&&[39m only runs [38;5;153mecho[39m [38;5;153mslept[39m if [38;5;153msleep[39m exits successfully (status 0), so stopping the sleep early with Ctrl-C would also
+    skip the echo.
+    [38;5;153m─────────────────────────────────────────────────[39m
+
+[38;5;246m✻[39m [38;5;246mCrunched for 6s · done 5:18 PM[39m
+
+[38;5;244m────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+[39m❯ [38;5;153m/exit[39m
+[38;5;244m────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[2mResume this session with:[0m
+[2mclaude --permission-mode default --resume 00000000-0000-0000-0000-000000000000[0m
+
+Pane is dead (status 0, Thu Nov  5 17:22:40 2026)

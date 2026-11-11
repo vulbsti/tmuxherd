@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        node: [20, 24]
+        include:
+          # tmux 3.2a: the oldest tmux tmuxherd supports
+          - os: ubuntu-22.04
+            node: 22
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - name: Install tmux
+        run: |
+          if [ "$RUNNER_OS" = "macOS" ]; then brew install tmux; else sudo apt-get update -q && sudo apt-get install -y -q tmux; fi
+          tmux -V
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
+      - run: npx playwright install --with-deps chromium
+      - run: npm run e2e
+      - name: Runtime dependency audit (must be zero runtime deps)
+        run: |
+          node -e "const p=require('./package.json'); if (Object.keys(p.dependencies||{}).length) { console.error('runtime deps found'); process.exit(1) }"
+          npm audit --omit=dev
+      - uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: playwright-${{ matrix.os }}-${{ matrix.node }}
+          path: test-results/

@@ -1,0 +1,40 @@
+
+  >_ OpenAI Codex (v0.166.0)
+     /tmp/sandbox/codex1
+
+
+› Say hi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+◦ Reconnecting... waiting for network (19s • esc to interrupt)
+  └ Connection failed: error sending request
+
+
+› Ask Codex to do anything
+
+  model-x high · /tmp/sandbox/codex1
+  ? for shortcuts                                                                              ⚠ 1 warning · f2 to view
