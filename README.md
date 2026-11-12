@@ -91,7 +91,7 @@ Every claim above has a test or a measurement in this repo.
 | Stalled = no progress or a retry loop for N min, or an error after work; exited with work pending | `test/tracker.test.js`, with a fake clock, including the recorded Claude retry loop |
 | Answers prompts by move → verify → Enter, and refuses stale prompts | `test/tmux.integration.test.js`, against real tmux |
 | Approves a **real** Claude Code and a **real** Codex prompt by clicking in the browser | `e2e/real.spec.js` (run locally; it needs logged-in agents). Transcript: [docs/verification/real-e2e.md](docs/verification/real-e2e.md) |
-| Spawn from the UI, worktree spawn, stall alert toast, typing in zoom view | `e2e/fake.spec.js` (CI on Linux and macOS) |
+| Spawn from the UI, worktree spawn, stall alert toast, typing in zoom view | `e2e/fake.spec.js` (CI on Linux; macOS on manual runs) |
 | Never loads your `~/.tmux.conf`; never sees or kills panes on other tmux servers | `test/tmux.integration.test.js` (with a control run that proves the test can fail) |
 | Token→cookie, DNS-rebinding and cross-origin protections | `test/server.test.js` |
 
